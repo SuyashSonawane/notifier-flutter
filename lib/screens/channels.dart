@@ -1,13 +1,16 @@
+import 'package:Notifier_7/provider/subscription.dart';
 import 'package:Notifier_7/widgets/channel-item.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class Channels extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CollectionReference channels =
         FirebaseFirestore.instance.collection('channels');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

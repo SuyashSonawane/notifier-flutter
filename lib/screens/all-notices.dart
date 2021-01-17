@@ -1,9 +1,11 @@
+import 'package:Notifier_7/provider/subscription.dart';
 import 'package:Notifier_7/widgets/notice-item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class AllNotices extends StatefulWidget {
   @override
@@ -13,32 +15,20 @@ class AllNotices extends StatefulWidget {
 class _AllNoticesState extends State<AllNotices> {
   int _value = 0;
 
-  List<dynamic> subscriptionsArray = [];
-  @override
-  void initState() {
-    super.initState();
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .get()
-        .then((value) {
-      setState(() {
-        subscriptionsArray = value['subscriptions'];
-        subscriptionsArray.insert(0, 'Public');
-        subscriptionsArray.insert(0, 'All');
-      });
-    });
-  }
-
+  Query notices;
   @override
   Widget build(BuildContext context) {
-    Query notices;
-    if (!subscriptionsArray.isEmpty) {
-      notices = FirebaseFirestore.instance.collection('notices').where(
-          'channels',
-          arrayContainsAny: _value == 0 ? subscriptionsArray : null,
-          arrayContains:
-              _value == 0 ? null : subscriptionsArray[_value] as String);
+    final subs = Provider.of<Subscriptions>(context);
+    List<dynamic> subscriptionsArray = subs.subs;
+
+    if (subscriptionsArray.isNotEmpty) {
+      if (_value == 0) {
+        notices = FirebaseFirestore.instance.collection('notices');
+      } else {
+        notices = FirebaseFirestore.instance.collection('notices').where(
+            'channels',
+            arrayContains: subscriptionsArray[_value] as String);
+      }
     }
     return Column(
       children: [
