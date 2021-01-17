@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 class Subscriptions with ChangeNotifier {
   List<dynamic> _subs = ['All'];
   DocumentReference ref;
-  Subscriptions() {
-    fetch();
-  }
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   void setSubs(List<dynamic> subs) {
     this._subs = subs;
   }
@@ -18,6 +18,9 @@ class Subscriptions with ChangeNotifier {
         .doc(FirebaseAuth.instance.currentUser.uid);
     ref.get().then((value) {
       _subs = value['subscriptions'];
+      _subs.forEach((e) {
+        messaging.subscribeToTopic(e).whenComplete(() => print(e));
+      });
       notifyListeners();
     });
   }
@@ -30,12 +33,14 @@ class Subscriptions with ChangeNotifier {
   void addSubscription(channelName) {
     _subs.add(channelName);
     ref.update({'subscriptions': _subs});
+    messaging.subscribeToTopic(channelName);
     notifyListeners();
   }
 
   void removeSubscription(channelName) {
     _subs.removeWhere((val) => val == channelName);
     ref.update({'subscriptions': _subs});
+    messaging.unsubscribeFromTopic(channelName);
     notifyListeners();
   }
 }

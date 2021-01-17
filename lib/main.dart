@@ -11,19 +11,24 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Provider.debugCheckInvalidValueType = null;
-
   await Firebase.initializeApp().then((value) {
-    runApp(ChangeNotifierProvider(
-      create: (_) => Subscriptions(),
-      child: MaterialApp(
-        home: MyApp(),
-        debugShowCheckedModeBanner: false,
-        routes: {
-          DetailNotice.routeName: (_) => DetailNotice(),
-          UserProfile.routeName: (_) => UserProfile(),
+    runApp(
+      ChangeNotifierProvider(
+        create: (_) {
+          var s = Subscriptions();
+          s.fetch();
+          return s;
         },
+        child: MaterialApp(
+          home: MyApp(),
+          debugShowCheckedModeBanner: false,
+          routes: {
+            DetailNotice.routeName: (_) => DetailNotice(),
+            UserProfile.routeName: (_) => UserProfile(),
+          },
+        ),
       ),
-    ));
+    );
   });
 }
 

@@ -1,6 +1,7 @@
 import 'package:Notifier_7/provider/subscription.dart';
 import 'package:Notifier_7/widgets/notice-item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
@@ -14,6 +15,7 @@ class AllNotices extends StatefulWidget {
 
 class _AllNoticesState extends State<AllNotices> {
   int _value = 0;
+  bool subsCheck = false;
 
   Query notices;
   @override
