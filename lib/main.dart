@@ -6,11 +6,17 @@ import 'package:Notifier_7/screens/user-profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Provider.debugCheckInvalidValueType = null;
+  final appDocumentDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
+  await Hive.openBox('myBox');
   await Firebase.initializeApp().then((value) {
     runApp(
       ChangeNotifierProvider(
@@ -32,6 +38,7 @@ void main() async {
   });
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   var snapshot;
   @override
@@ -41,6 +48,7 @@ class MyApp extends StatelessWidget {
       builder: (ctx, userSnapshot) {
         if (userSnapshot.hasData) {
           snapshot = userSnapshot.data.phoneNumber;
+          print(snapshot);
           return Home();
         } else
           return LoginScreen();

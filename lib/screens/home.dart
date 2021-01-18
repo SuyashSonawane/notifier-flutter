@@ -3,6 +3,7 @@ import 'package:Notifier_7/screens/user-profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import './login.dart';
 import './all-notices.dart';
 import './channels.dart';
@@ -16,19 +17,19 @@ class _HomeState extends State<Home> {
   String uid;
 
   void requestPermission() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // FirebaseMessaging messaging = FirebaseMessaging();
 
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    // NotificationSettings settings = await messaging.requestPermission(
+    //   alert: true,
+    //   announcement: false,
+    //   badge: true,
+    //   carPlay: false,
+    //   criticalAlert: false,
+    //   provisional: false,
+    //   sound: true,
+    // );
 
-    print('User granted permission: ${settings.authorizationStatus}');
+    // print('User granted permission: ${settings.authorizationStatus}');
   }
 
   int _selectedIndex = 0;
